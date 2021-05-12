@@ -57,4 +57,7 @@ def factor(n,attempts=50):
                 return val
 
 if __name__ == "__main__":
-    print(factor(Integer(sys.argv[1])))
+    if len(sys.argv) == 2:
+       print(factor(Integer(sys.argv[1]),Integer(sys.argv[2])))
+    else:
+       print(factor(Integer(sys.argv[1])))

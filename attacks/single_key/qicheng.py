@@ -16,13 +16,14 @@ class Attack(AbstractAttack):
     def attack(self, publickey, cipher=[], progress=True):
         """Qi Cheng - A New Class of Unsafe Primes"""
         try:
-            sageresult = int(
-                subprocess.check_output(
-                    ["sage", "%s/sage/qicheng.sage" % rootpath, str(publickey.n)],
+            attempts = 1000
+            sageresult = subprocess.check_output(
+                    ["sage", "%s/sage/qicheng.sage" % rootpath, str(publickey.n),str(attempts)],
                     timeout=self.timeout,
                     stderr=subprocess.DEVNULL,
                 )
-            )
+            sageresult = int(sageresult.decode("utf8").replace("\n",""))
+           
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired, ValueError):
             return (None, None)
 
@@ -38,10 +39,11 @@ class Attack(AbstractAttack):
         from lib.keys_wrapper import PublicKey
 
         key_data = """-----BEGIN PUBLIC KEY-----
-MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgAf9o7hkl15GaKWJ51ULnccQmgKl
-u1DS4UUpfTP9rVsJ0id9WMZeAD6sr2kJuraVywHszS4BNhYGfJ4Yyd+DabTpIWRx
-zSdsZXTLCf5XvPV9BUkg9FCkBjvl0YBUZ1toQCUqlI6v0tGrEGllpUF3Nq67Htd1
-YYO3FuEbderGwu9dAgMBAAE=
+MIHfMA0GCSqGSIb3DQEBAQUAA4HNADCByQKBwQOQAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAEJaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVuNoAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAs77PAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAADXxXC8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB5u1rSgAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI20Lb0UCAwEAAQ==
 -----END PUBLIC KEY-----"""
         self.timeout = 120
         result = self.attack(PublicKey(key_data), progress=False)

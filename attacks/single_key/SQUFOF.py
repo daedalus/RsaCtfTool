@@ -14,7 +14,7 @@ multiplier = [1, 3, 5, 7, 11, 3*5, 3*7, 3*11, 5*7, 5*11, 7*11, 3*5*7, 3*5*11, 3*
 
 def SQUFOF(N):
     s = int(isqrt(N) + 0.5)
-    L = int(2 * isqrt(2 * s))
+    L = int(isqrt(s << 1) << 1)
     
     if (s ** 2 == N):
         return s
@@ -22,7 +22,7 @@ def SQUFOF(N):
         D = multiplier[k] * N
         Po = Pprev = P = isqrt(D)
         Qprev = 1
-        Q = D - (Po ** 2)
+        Q = D - pow(Po, 2)
         B = 3 * L
         c0 = True
         i = 2
@@ -32,7 +32,7 @@ def SQUFOF(N):
             q = Q
             Q = Qprev + b * (Pprev - P)
             r = int(isqrt(Q) + 0.5)
-            if (not(i & 1) and ((r ** 2) == Q)):
+            if (not(i & 1) and (pow(r, 2) == Q)):
                 break
             Qprev = q
             Pprev = P
@@ -41,7 +41,7 @@ def SQUFOF(N):
         b = ((Po - P) // r)
         Pprev = P = b * r + P
         Qprev = r
-        Q = (D - (Pprev ** 2)) // Qprev
+        Q = (D - pow(Pprev, 2)) // Qprev
         i = 0
         c1 = True
         while(c1):

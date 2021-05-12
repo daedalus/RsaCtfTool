@@ -1,5 +1,4 @@
 from sage.libs.ntl.ntl_ZZ_pX import ntl_ZZ_pContext, ntl_ZZ_pX
-from lib.rsalibnum import powmod
 
 def poly_fast_ntl(ctx, f, xs):
     # Fast multipoint evaulation from Modern Computer Algebra 3rd edition 10.1
@@ -34,13 +33,13 @@ def factor(n, e, bound):
     D = ceil(sqrt(bound))
     ctx = ntl_ZZ_pContext(n)  # NTL's polynomial multiplication is much faster
     x = randint(1, n - 1)
-    xe = int(powmod(x, e, n))
+    xe = int(pow(x, e, n))
     poly_factors = []
     for a in range(0, D):
         poly_factors.append(ntl_ZZ_pX([-x, power_mod(xe, a, n)], ctx))
     poly = product(poly_factors)
-    xed = int(powmod(xe, D, n))
-    ys = [int(powmod(xed, b, n)) for b in range(0, D)]
+    xed = int(pow(xe, D, n))
+    ys = [int(pow(xed, b, n)) for b in range(0, D)]
     for t in poly_fast_ntl(ctx, poly, ys):
         p = gcd(t, n)
         if p > 1 and p < n:
@@ -54,10 +53,11 @@ if __name__ == "__main__":
     n = Integer(sys.argv[1])
     e = Integer(sys.argv[2])
     bound = Integer(sys.argv[3])  # upper bound of min(d_p, d_q)
-    for _ in range(3):  # Retrying
+    for i in range(3):  # Retrying
+        print("round: %d" % i, file=sys.stderr)
         r = factor(n, e, bound)
         if r is not None:
             p, q = r
+            print("result: %d" % p, file=sys.stderr)
             print(p)
-            exit()
-    print(0)  # Prints 0 if failed
+            break

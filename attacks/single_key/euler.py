@@ -20,10 +20,10 @@ class Attack(AbstractAttack):
         solutionsFound = []
         firstb = -1
         while a < end and len(solutionsFound) < 2:
-            bsquare = n - a ** 2
+            bsquare = n - pow(a, 2)
             if bsquare > 0:
                 b = isqrt(bsquare)
-                if (b ** 2 == bsquare) and (a != firstb) and (b != firstb):
+                if (pow(b, 2) == bsquare) and (a != firstb) and (b != firstb):
                     firstb = b
                     solutionsFound.append([int(b), a])
             a += 1
@@ -37,8 +37,12 @@ class Attack(AbstractAttack):
         h = gcd(a + c, d + b)
         m = gcd(a + c, d - b)
         l = gcd(a - c, d + b)
-        n = (k ** 2 + h ** 2) * (l ** 2 + m ** 2)
-        return [int(k ** 2 + h ** 2) >> 1, int(l ** 2 + m ** 2) >> 1]
+        pk2 = pow(k, 2)
+        ph2 = pow(h, 2)
+        pl2 = pow(l, 2)
+        pm2 = pow(m, 2)
+        n = (pk2 + ph2) * (pl2 + pm2)
+        return [(pk2 + ph2) >> 1, (pl2 + pm2) >> 1]
 
     def attack(self, publickey, cipher=[], progress=True):
         """Run attack with Euler method"""
@@ -74,9 +78,7 @@ class Attack(AbstractAttack):
         from lib.keys_wrapper import PublicKey
 
         key_data = """-----BEGIN PUBLIC KEY-----
-MGYwDQYJKoZIhvcNAQEBBQADVQAwUgJLAi7v97hPb80NkMELBLYGAGEeDOdFAiW6
-5wq4OGN1P6nmUmg5iFRQA6YWU8x1WdQMmVs6KxIUS89W0InUN3JVQ9SzLE32nKXc
-t6rrAgMBAAE=
+MCEwDQYJKoZIhvcNAQEBBQADEAAwDQIGBUZ2EydBAgMBAAE=
 -----END PUBLIC KEY-----"""
         result = self.attack(PublicKey(key_data), progress=False)
         return result != (None, None)

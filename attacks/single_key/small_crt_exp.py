@@ -17,8 +17,8 @@ class Attack(AbstractAttack):
     def attack(self, publickey, cipher=[], progress=True):
         """Factor n if mininum of crt exponent is small enough"""
         try:
-            p = int(
-                subprocess.check_output(
+            #p = int(
+            p = subprocess.check_output(
                     [
                         "sage",
                         "%s/sage/small_crt_exp.sage" % rootpath,
@@ -29,7 +29,9 @@ class Attack(AbstractAttack):
                     timeout=self.timeout,
                     stderr=subprocess.DEVNULL,
                 )
-            )
+            #)
+            print(p) 
+            p = int(p)
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
             return (None, None)
         if p > 0:

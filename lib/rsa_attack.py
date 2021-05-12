@@ -146,9 +146,12 @@ class RSAAttack(object):
             attacks_list.remove("nullattack")
         except ValueError:
             pass
+ 
+        if self.args.disable_attack == None:
+            self.args.disable_attack = []
 
         for attack in attacks_list:
-            if attack in self.args.attack or "all" in self.args.attack:
+            if (attack in self.args.attack or "all" in self.args.attack) and (not attack in self.args.disable_attack):
                 try:
                     if multikeys:
                         attack_module = importlib.import_module(

@@ -121,6 +121,8 @@ if __name__ == "__main__":
         nargs="+",
         choices=attacks_list,
     )
+    parser.add_argument("--disable_attack", help="Disable the specified attacks.", choices=attacks_list)
+
     parser.add_argument(
         "--sendtofdb", help="Send results to factordb", action="store_true"
     )
